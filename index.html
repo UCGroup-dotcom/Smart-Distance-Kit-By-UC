@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UC Group - Smart Distance Kit Support</title>
+    <style>
+        /* Premium Dark Theme CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+        }
+
+        /* Header Styling */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 15px;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #3b82f6;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .project-title {
+            font-size: 16px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        /* Section Headings */
+        h3 {
+            font-size: 18px;
+            color: #38bdf8;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Wiring Table */
+        .wiring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .wiring-table th, .wiring-table td {
+            border: 1px solid #334155;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .wiring-table th {
+            background-color: #1e293b;
+            color: #38bdf8;
+        }
+
+        .wiring-table tr:nth-child(even) {
+            background-color: #111827;
+        }
+
+        /* Code Box Styling */
+        .code-container {
+            position: relative;
+            background: #090d16;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px solid #334155;
+        }
+
+        pre {
+            overflow-x: auto;
+            white-space: pre;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            color: #4ade80;
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* App Links Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .app-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: #334155;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid #475569;
+            transition: background 0.2s;
+        }
+
+        .app-btn:hover {
+            background: #475569;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="brand-logo">UC GROUP</div>
+        <div class="project-title">Smart Distance Measurement Kit 🚀</div>
+    </div>
+
+    <!-- Wiring Guide -->
+    <h3>🔌 Connection/Wiring Guide</h3>
+    <table class="wiring-table">
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Component Pin</th>
+                <th>Arduino Pin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ultrasonic Sensor</td>
+                <td>VCC / GND</td>
+                <td>5V / GND</td>
+            </tr>
+            <tr>
+                <td>Ultrasonic Sensor</td>
+                <td>Trig / Echo</td>
+                <td>Pin 9 / Pin 10</td>
+            </tr>
+            <tr>
+                <td>16x2 LCD I2C Module</td>
+                <td>VCC / GND</td>
+                <td>5V / GND</td>
+            </tr>
+            <tr>
+                <td>16x2 LCD I2C Module</td>
+                <td>SDA / SCL</td>
+                <td>A4 / A5</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Code Section -->
+    <h3>💻 Arduino Testing Code</h3>
+    <div class="code-container">
+        <button class="copy-btn" id="copyBtn" onclick="copyArduinoCode()">Copy Code</button>
+<pre id="arduinoCode">
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+const int trigPin = 9;
+const int echoPin = 10;
+long duration;
+int distance;
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+  
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  
+  lcd.setCursor(0, 0);
+  lcd.print("  UC GROUP  ");
+  lcd.setCursor(0, 1);
+  lcd.print("Distance Monitor");
+  delay(3000);
+  lcd.clear();
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+
+  lcd.setCursor(0, 0);
+  lcd.print("Object Distance:");
+  lcd.setCursor(0, 1);
+  lcd.print("     "); 
+  lcd.setCursor(0, 1);
+  lcd.print(distance);
+  lcd.print(" cm");
+
+  delay(500);
+}
+</pre>
+    </div>
+
+    <!-- Official App Links -->
+    <h3>📲 Software Setup & Apps</h3>
+    <div class="btn-group">
+        <a href="https://play.google.com/store/apps/details?id=name.antonsmirnov.android.arduinodroid2" target="_blank" class="app-btn">Mobile: ArduinoDroid</a>
+        <a href="https://www.arduino.cc/en/software" target="_blank" class="app-btn">PC: Arduino IDE</a>
+    </div>
+
+    <div class="footer">
+        © 2026 UC Group India. All Rights Reserved.
+    </div>
+</div>
+
+<script>
+    // Mobile Friendly Copy Function
+    function copyArduinoCode() {
+        const codeElement = document.getElementById("arduinoCode");
+        // Simple regex to fix HTML entity codes (< and >) while copying
+        let codeText = codeElement.innerText || codeElement.textContent;
+        
+        navigator.clipboard.writeText(codeText).then(() => {
+            const btn = document.getElementById("copyBtn");
+            btn.innerText = "Copied! ✓";
+            btn.style.background = "#22c55e"; // Green color
+            
+            setTimeout(() => {
+                btn.innerText = "Copy Code";
+                btn.style.background = "#3b82f6"; // Reset to Blue
+            }, 2000);
+        }).catch(err => {
+            alert("Mobile browser copy block! Please long-press and copy the code manually.");
+        });
+    }
+</script>
+
+</body>
+</html>
